@@ -1,0 +1,160 @@
+using System;
+
+public interface IBankAccount
+{
+    decimal Balance { get; }
+    void Deposit(decimal amount);
+    void Withdraw(decimal amount);
+}
+
+public class SavingsAccount : IBankAccount
+{
+    private decimal balance;
+
+    public decimal Balance
+    {
+        get { return balance; }
+    }
+
+    public SavingsAccount(decimal initialBalance)
+    {
+        balance = initialBalance;
+    }
+
+    public void Deposit(decimal amount)
+    {
+        if (amount > 0)
+        {
+            balance += amount;
+            Console.WriteLine($"Deposited {amount:C} into Savings Account.");
+        }
+        else
+        {
+            Console.WriteLine("Deposit amount must be positive.");
+        }
+    }
+
+    public void Withdraw(decimal amount)
+    {
+        if (amount > 0 && amount <= balance)
+        {
+            balance -= amount;
+            Console.WriteLine($"Withdrew {amount:C} from Savings Account.");
+        }
+        else
+        {
+            Console.WriteLine("Invalid withdrawal amount.");
+        }
+    }
+}
+
+public class CheckingAccount : IBankAccount
+{
+    private decimal balance;
+
+    public decimal Balance
+    {
+        get { return balance; }
+    }
+
+    public CheckingAccount(decimal initialBalance)
+    {
+        balance = initialBalance;
+    }
+
+    public void Deposit(decimal amount)
+    {
+        if (amount > 0)
+        {
+            balance += amount;
+            Console.WriteLine($"Deposited {amount:C} into Checking Account.");
+        }
+        else
+        {
+            Console.WriteLine("Deposit amount must be positive.");
+        }
+    }
+
+    public void Withdraw(decimal amount)
+    {
+        if (amount > 0 && amount <= balance)
+        {
+            balance -= amount;
+            Console.WriteLine($"Withdrew {amount:C} from Checking Account.");
+        }
+        else
+        {
+            Console.WriteLine("Invalid withdrawal amount.");
+        }
+    }
+}
+
+class Program
+{
+    static void Main(string[] args)
+    {
+        IBankAccount savings = new SavingsAccount(30000); // create a SavingsAccount
+        IBankAccount checking = new CheckingAccount(15000); // create a CheckingAccount
+
+        bool running = true;
+        while (running)
+        {
+            Console.WriteLine("\nWelcome to the Bank Account Management System");
+            Console.WriteLine("Please choose an option:");
+            Console.WriteLine("1. Deposit");
+            Console.WriteLine("2. Withdraw");
+            Console.WriteLine("3. Exit");
+
+            int choice = int.Parse(Console.ReadLine());
+
+            if (choice == 3)
+            {
+                running = false;
+                Console.WriteLine("Thank you for using the system. Goodbye!");
+                break;
+            }
+
+            Console.WriteLine("\nPlease select the account:");
+            Console.WriteLine("1. Savings Account");
+            Console.WriteLine("2. Checking Account");
+
+            int accountChoice = int.Parse(Console.ReadLine());
+
+            IBankAccount selectedAccount = null;
+
+            if (accountChoice == 1)
+            {
+                selectedAccount = savings;
+            }
+            else if (accountChoice == 2)
+            {
+                selectedAccount = checking;
+            }
+            else
+            {
+                Console.WriteLine("Invalid account selection.");
+                continue;
+            }
+
+            Console.WriteLine("Enter the amount:");
+            decimal amount = decimal.Parse(Console.ReadLine());
+
+            switch (choice)
+            {
+                case 1:
+                    selectedAccount.Deposit(amount);
+                    break;
+                case 2:
+                    selectedAccount.Withdraw(amount);
+                    break;
+                default:
+                    Console.WriteLine("Invalid option.");
+                    break;
+            }
+
+            Console.WriteLine($"\nCurrent {((accountChoice == 1) ? "Savings" : "Checking")} Account Balance: {selectedAccount.Balance:C}");
+        }
+    }
+}
+
+
